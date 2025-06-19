@@ -1,5 +1,4 @@
 {
-
   "routes": [
     {
       "route": "/search",
@@ -29,6 +28,5 @@
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": ["/.auth/*", "/api/*"]
-
-}
+  }
 }
