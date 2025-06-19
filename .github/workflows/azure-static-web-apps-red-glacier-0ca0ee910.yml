@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     permissions:
-       id-token: write
-       contents: read
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
         with:
@@ -28,10 +28,17 @@ jobs:
         uses: actions/github-script@v6
         id: idtoken
         with:
-           script: |
-               const coredemo = require('@actions/core')
-               return await coredemo.getIDToken()
-           result-encoding: string
+          script: |
+            const coredemo = require('@actions/core')
+            return await coredemo.getIDToken()
+          result-encoding: string
+      # ← INSERT THIS DEBUG STEP
+      - name: Show workspace contents
+        run: |
+          echo "🔍 Root files:"
+          ls -1
+          echo "🔍 Full tree:"
+          ls -R
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
