@@ -41,12 +41,11 @@ jobs:
       - name: Build production assets
         run: npm run build
       # ← INSERT THIS DEBUG STEP
-      - name: Show workspace contents
+      - name: Move build output to root
         run: |
-          echo "🔍 Root files:"
-          ls -1
-          echo "🔍 Full tree:"
-          ls -R
+          mv dist/* .
+          mv dist/.* . || true
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
