@@ -52,3 +52,26 @@ export default tseslint.config({
   },
 })
 ```
+
+//App Directory for structure
+
+my-directory-app/
+│
+├── public/
+│
+├── src/
+│   ├── auth/
+│   │   ├── AuthProvider.tsx
+│   │   ├── useAuth.ts
+│   │   └── types.ts
+│   │
+│   ├── pages/
+│   │   ├── Login.tsx         ← default login screen
+│   │   ├── Search.tsx        ← internal search tool
+│   │   ├── Upload.tsx        ← form page for new entries
+│   │   └── ViewDetail.tsx    ← detailed view of article by ID
+│   │
+│   ├── App.tsx
+│   └── main.tsx
+│
+├── staticwebapp.config.json

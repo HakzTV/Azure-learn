@@ -1,0 +1,34 @@
+{
+
+  "routes": [
+    {
+      "route": "/search",
+      "allowedRoles": ["authenticated"]
+    },
+    {
+      "route": "/upload",
+      "allowedRoles": ["authenticated"]
+    },
+    {
+      "route": "/view/*",
+      "allowedRoles": ["authenticated"]
+    },
+    {
+      "route": "/",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/login",
+      "rewrite": "/index.html"
+    },
+    {
+      "route": "/logout",
+      "rewrite": "/index.html"
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/.auth/*", "/api/*"]
+
+}
+}
