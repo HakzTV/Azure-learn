@@ -40,11 +40,6 @@ jobs:
       # 3. Build your app (tsc + vite)
       - name: Build production assets
         run: npm run build
-      # ← INSERT THIS DEBUG STEP
-      - name: Move build output to root
-        run: |
-          mv dist/* .
-          mv dist/.??* . || true
 
       - name: Build And Deploy
         id: builddeploy
