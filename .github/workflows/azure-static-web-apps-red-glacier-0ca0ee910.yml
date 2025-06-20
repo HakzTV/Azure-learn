@@ -2,71 +2,55 @@ name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+    types: [opened, synchronize, reopened]
+    branches: [main]
 
 jobs:
-  build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+  build_and_deploy:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
 
     steps:
-      # 1. Checkout code
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Setup Node 20 (matches react-router requirement)
       - name: 🛠️ Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      # 3. Install dependencies
       - name: 📦 Install dependencies
-        run: |
-          cd my-auth-app
-          npm ci
-        working-directory: my-auth-app
+        run: npm ci
 
-      # 4. Build production assets
-      - name: 🏗️ Build the app
-        run: |
-          cd my-auth-app
-          npm run build
-        working-directory: my-auth-app
+      - name: 🏗️ Build production assets
+        run: npm run build
 
-      # 5. Copy config into dist
-      - name: 📋 Copy config to dist
-        run: |
-          cp my-auth-app/staticwebapp.config.json my-auth-app/dist/
-        working-directory: my-auth-app
+      - name: 🧾 Copy config to dist
+        run: cp staticwebapp.config.json dist/
 
-      # 6. Debug: List dist contents
       - name: List dist contents
         run: |
-          echo "📂 Contents of my-auth-app/dist/:"
-          ls -lah my-auth-app/dist
-          echo "📄 Preview of index.html:"
-          head -n 20 my-auth-app/dist/index.html
+          echo "📂 Contents of dist:"
+          ls -lah dist
+          echo
+          echo "📄 index.html (first lines):"
+          head -n 10 dist/index.html
+          echo
           echo "⚙️ staticwebapp.config.json:"
-          cat my-auth-app/dist/staticwebapp.config.json
+          cat dist/staticwebapp.config.json
 
-      # 7. Deploy to Azure Static Web Apps
       - name: 🚀 Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_GLACIER_0CA0EE910 }}
           action: upload
           skip_app_build: true
-          app_location: "/" # your project folder
-          output_location: "dist" # where your built files live
+          app_location: "/" # your project root
+          output_location: "dist" # built files location
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
