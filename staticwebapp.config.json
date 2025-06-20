@@ -23,10 +23,8 @@
       "statusCode": 200
     }
   ],
-  "navigationFallback": {
-    "rewrite": "/index.html",
-      "methods": ["GET"],
-
-    "exclude": [ "/.auth/*", "/api/*" ]
-  }
+"navigationFallback": {
+  "rewrite": "/index.html",
+  "exclude": [ "/.auth/*", "/api/*" ]
+}
 }
