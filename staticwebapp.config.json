@@ -10,7 +10,6 @@
       "route": "/upload",
       "methods": ["GET"],
 
-      "allowedRoles": ["authenticated"],
       "serve": "/index.html",
       "statusCode": 200
     },
@@ -18,7 +17,6 @@
       "route": "/view/*",
       "methods": ["GET"],
 
-      "allowedRoles": ["authenticated"],
       "serve": "/index.html",
       "statusCode": 200
     }
