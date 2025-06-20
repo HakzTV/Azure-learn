@@ -1,6 +1,5 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './auth/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import LoginPage from './pages/Login';
 import SearchPage from './pages/Search';
@@ -11,7 +10,7 @@ import NotFound from './pages/NotFound';
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
+    
         <Routes>
           {/* Public route */}
           <Route path="/" element={<LoginPage />} />
@@ -26,7 +25,7 @@ export default function App() {
           {/* Catch-all 404 (optional) */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </AuthProvider>
+ 
     </BrowserRouter>
   );
 }
