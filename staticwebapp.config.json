@@ -1,15 +1,18 @@
 {
   "routes": [
     {
-      "route": "/search"
+      "route": "/search",
+      "rewrite": "/index.html"
     },
     {
       "route": "/upload",
-      "allowedRoles": ["authenticated"]
+      "allowedRoles": ["authenticated"],
+      "rewrite": "/index.html"
     },
     {
       "route": "/view/*",
-      "allowedRoles": ["authenticated"]
+      "allowedRoles": ["authenticated"],
+      "rewrite": "/index.html"
     }
   ],
   "navigationFallback": {
