@@ -36,10 +36,13 @@ jobs:
             # 2. Install your dependencies
       - name: Install dependencies
         run: npm ci
-
+      - name: Build production assets
+        run: npm run build
       - name: Copy config to dist
         run: cp staticwebapp.config.json dist/
       # 3. Build your app (tsc + vite)
+      - name: List dist contents
+        run: ls -R dist
       - name: Build And Deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
