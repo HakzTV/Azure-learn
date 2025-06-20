@@ -24,6 +24,13 @@ jobs:
         run: |
           echo "--- public/ contents ---"
           ls -R public
+      - name: 🔐 Get Id Token
+        id: idtoken
+        uses: actions/github-script@v6
+        with:
+          script: |
+            return await core.getIDToken();
+            result-encoding: string
 
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
@@ -33,3 +40,4 @@ jobs:
           app_location: "/" # your repo root
           output_location: "dist" # Vite’s default build folder
           skip_app_build: false # let the action build for you
+
