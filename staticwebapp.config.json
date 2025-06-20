@@ -1,4 +1,9 @@
 {
+  
+"navigationFallback": {
+  "rewrite": "/index.html",
+    "exclude": ["/.auth/*", "/api/*", "/static/*", "/*.png", "/*.css", "/*.js"]
+},
   "routes": [
     {
       "route": "/search",
@@ -19,10 +24,14 @@
 
       "serve": "/index.html",
       "statusCode": 200
+    },
+      {
+      "route": "/.auth/login/aad",
+      "redirect": "/.auth/login/aad"
+    },
+    {
+      "route": "/.auth/logout",
+      "redirect": "/.auth/logout"
     }
-  ],
-"navigationFallback": {
-  "rewrite": "/index.html",
-  "exclude": [ "/.auth/*", "/api/*" ]
-}
+  ]
 }
