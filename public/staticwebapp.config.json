@@ -1,0 +1,37 @@
+{
+  
+"navigationFallback": {
+  "rewrite": "/index.html",
+    "exclude": ["/.auth/*", "/api/*", "/static/*", "/*.png", "/*.css", "/*.js"]
+},
+  "routes": [
+    {
+      "route": "/search",
+      "methods": ["GET"],
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/upload",
+      "methods": ["GET"],
+
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/view/*",
+      "methods": ["GET"],
+
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+      {
+      "route": "/.auth/login/aad",
+      "redirect": "/.auth/login/aad"
+    },
+    {
+      "route": "/.auth/logout",
+      "redirect": "/.auth/logout"
+    }
+  ]
+}
