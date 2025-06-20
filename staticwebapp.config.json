@@ -2,17 +2,20 @@
   "routes": [
     {
       "route": "/search",
-      "rewrite": "/index.html"
+      "serve": "/index.html",
+      "statusCode": 200
     },
     {
       "route": "/upload",
       "allowedRoles": ["authenticated"],
-      "rewrite": "/index.html"
+      "serve": "/index.html",
+      "statusCode": 200
     },
     {
       "route": "/view/*",
       "allowedRoles": ["authenticated"],
-      "rewrite": "/index.html"
+      "serve": "/index.html",
+      "statusCode": 200
     }
   ],
   "navigationFallback": {
