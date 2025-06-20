@@ -2,23 +2,27 @@ name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    types: [opened, synchronize, reopened]
-    branches: [main]
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
 
 jobs:
-  build_and_deploy:
+  build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
+    name: Build and Deploy Job
     permissions:
       id-token: write
       contents: read
-
     steps:
-      - name: ⬇️ Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
 
-      - name: 🛠️ Setup Node.js
+      - name: 🔧 Setup Node.js (v20)
         uses: actions/setup-node@v3
         with:
           node-version: "20"
@@ -26,41 +30,27 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci
 
-      - name: 🏗️ Build production assets
+      - name: 🛠️ Build production assets
         run: npm run build
 
-      - name: 🧾 Copy config to dist
+      - name: 📂 Copy config to dist
         run: cp staticwebapp.config.json dist/
 
       - name: List dist contents
         run: |
-          echo "📂 Contents of dist:"
+          echo "🧾 Contents of dist:"
           ls -lah dist
-          echo
-          echo "📄 index.html (first lines):"
-          head -n 10 dist/index.html
-          echo
-          echo "⚙️ staticwebapp.config.json:"
+          echo "📄 Preview of index.html:"
+          cat dist/index.html | head -n 20
+          echo "🔧 staticwebapp.config.json:"
           cat dist/staticwebapp.config.json
 
-      - name: 🚀 Deploy to Azure Static Web Apps
+      - name: 🚀 Build and Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_GLACIER_0CA0EE910 }}
-          action: upload
+          action: "upload"
           skip_app_build: true
-          app_location: "/" # your project root
-          output_location: "dist" # built files location
-
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: ❌ Close Pull Request
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          action: close
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_GLACIER_0CA0EE910 }}
-          app_location: "/"
+          app_location: "/" # All files are in repo root
+          output_location: "dist" # Your Vite output folder
+          github_id_token: ${{ steps.idtoken.outputs.result }}
