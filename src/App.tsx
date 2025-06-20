@@ -1,5 +1,5 @@
 // src/App.tsx
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SearchPage from './pages/Search';
 import UploadPage from './pages/Upload';
 import { AuthProvider } from './auth/AuthProvider';
@@ -9,11 +9,11 @@ import ViewDetailPage from './pages/ViewDetail';
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <AuthProvider>
         <Routes>
           {/* Public login page */}
-          <Route path="/" element={<LoginPage />} />
+          <Route path="*" element={<LoginPage />} />
 
           {/* All these paths require an authenticated user */}
           <Route
@@ -42,9 +42,9 @@ export default function App() {
           />
 
           {/* Fallback for any other route: send to login or 404 */}
-          <Route path="*" element={<LoginPage />} />
+          <Route path="/" element={<LoginPage />} />
         </Routes>
       </AuthProvider>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
