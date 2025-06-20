@@ -1,43 +1,46 @@
 name: Azure Static Web Apps CI/CD
+
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
 
 jobs:
-  build_and_deploy:
+  build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
+    name: Build and Deploy Job
     permissions:
-      contents: read
       id-token: write
-
+      contents: read
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
 
-      - name: Setup Node.js
+      - name: 🔧 Setup Node.js (v20)
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      - name: 🧾 Inspect public/
-        run: |
-          echo "--- public/ contents ---"
-          ls -R public
       - name: 🔐 Get Id Token
         id: idtoken
         uses: actions/github-script@v6
         with:
           script: |
             return await core.getIDToken();
-            result-encoding: string
+          result-encoding: string
 
-      - name: Deploy to Azure Static Web Apps
+      - name: 🚀 Build and Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_GLACIER_0CA0EE910 }}
           action: "upload"
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          app_location: "/" # your repo root
-          output_location: "dist" # Vite’s default build folder
-          skip_app_build: false # let the action build for you
-
+          # skip_app_build: true
+          app_location: "/" # All files are in repo root
+          output_location: "dist" # Your Vite output folder
+          github_id_token: ${{ steps.idtoken.outputs.result }}
