@@ -1,8 +1,7 @@
 {
   "routes": [
     {
-      "route": "/search",
-      "allowedRoles": ["authenticated"]
+      "route": "/search"
     },
     {
       "route": "/upload",
