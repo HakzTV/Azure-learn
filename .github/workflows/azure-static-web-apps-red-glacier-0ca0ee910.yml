@@ -13,59 +13,70 @@ jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
     permissions:
       id-token: write
       contents: read
+
     steps:
-      - uses: actions/checkout@v3
+      # 1. Checkout code
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Setup Node 20 (matches react-router requirement)
+      - name: 🛠️ Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          submodules: true
-          lfs: false
-      - name: Install OIDC Client from Core Package
-        run: npm install @actions/core@1.6.0 @actions/http-client
-      - name: Get Id Token
-        uses: actions/github-script@v6
-        id: idtoken
-        with:
-          script: |
-            const coredemo = require('@actions/core')
-            return await coredemo.getIDToken()
-          result-encoding:
-            string
-            # 2. Install your dependencies
-      - name: Install dependencies
-        run: npm ci
-      - name: Build production assets
-        run: npm run build
-      - name: Copy config to dist
-        run: cp staticwebapp.config.json dist/
-      # 3. Build your app (tsc + vite)
+          node-version: "20"
+
+      # 3. Install dependencies
+      - name: 📦 Install dependencies
+        run: |
+          cd my-auth-app
+          npm ci
+        working-directory: my-auth-app
+
+      # 4. Build production assets
+      - name: 🏗️ Build the app
+        run: |
+          cd my-auth-app
+          npm run build
+        working-directory: my-auth-app
+
+      # 5. Copy config into dist
+      - name: 📋 Copy config to dist
+        run: |
+          cp my-auth-app/staticwebapp.config.json my-auth-app/dist/
+        working-directory: my-auth-app
+
+      # 6. Debug: List dist contents
       - name: List dist contents
-        run: ls -R dist
-      - name: Build And Deploy
-        id: builddeploy
+        run: |
+          echo "📂 Contents of my-auth-app/dist/:"
+          ls -lah my-auth-app/dist
+          echo "📄 Preview of index.html:"
+          head -n 20 my-auth-app/dist/index.html
+          echo "⚙️ staticwebapp.config.json:"
+          cat my-auth-app/dist/staticwebapp.config.json
+
+      # 7. Deploy to Azure Static Web Apps
+      - name: 🚀 Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_GLACIER_0CA0EE910 }}
-          action: "upload"
+          action: upload
           skip_app_build: true
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/" # App source code path
-          api_location: "" # Api source code path - optional
-
-          app_artifact_location: "dist"
-          github_id_token: ${{ steps.idtoken.outputs.result }}
-          ###### End of Repository/Build Configurations ######
+          app_location: "/" # your project folder
+          output_location: "dist" # where your built files live
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
-    name: Close Pull Request Job
+    permissions:
+      contents: read
     steps:
-      - name: Close Pull Request
-        id: closepullrequest
+      - name: ❌ Close Pull Request
         uses: Azure/static-web-apps-deploy@v1
         with:
-          action: "close"
+          action: close
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_GLACIER_0CA0EE910 }}
+          app_location: "/"
