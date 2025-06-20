@@ -35,6 +35,14 @@ jobs:
 
       - name: 📂 Copy config to dist
         run: cp staticwebapp.config.json dist/
+      - name: 🔐 Get Id Token
+        id: idtoken
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const core = require('@actions/core');
+            return await core.getIDToken();
+          result-encoding: string
 
       - name: List dist contents
         run: |
