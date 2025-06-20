@@ -9,7 +9,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'src/staticwebapp.config.json',
+          src: 'staticwebapp.config.json',
           dest: '.',
         }
       ]
