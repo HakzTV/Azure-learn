@@ -4,6 +4,13 @@
   "rewrite": "/index.html",
     "exclude": ["/.auth/*", "/api/*", "/static/*", "/*.png", "/*.css", "/*.js"]
 },
+  "mimeTypes": {
+    ".js": "application/javascript",
+    ".ts": "application/javascript",
+    ".css": "text/css",
+    ".json": "application/json",
+    ".wasm": "application/wasm"
+  },
   "routes": [
     {
       "route": "/search",
