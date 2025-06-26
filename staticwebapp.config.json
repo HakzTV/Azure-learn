@@ -14,7 +14,6 @@
     {
       "route": "/upload",
       "methods": ["GET"],
-
       "serve": "/index.html",
       "statusCode": 200
     },
